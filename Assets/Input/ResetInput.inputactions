@@ -1,0 +1,34 @@
+{
+    "name": "ResetInput",
+    "maps": [
+        {
+            "name": "Reset",
+            "id": "0f599867-4264-4872-890d-0de4a2763c0c",
+            "actions": [
+                {
+                    "name": "ResetScene",
+                    "type": "Button",
+                    "id": "5992cdcd-1b07-486b-8bde-bbdb0ff8dbf6",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "16c3eed6-145c-4476-b0fd-cb55522f90fc",
+                    "path": "<Keyboard>/7",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ResetScene",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
