@@ -25,12 +25,12 @@
                 },
                 {
                     "name": "Crouch",
-                    "type": "Button",
+                    "type": "Value",
                     "id": "5b3793f1-8e7a-47fb-832b-16a5be1ecc8e",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "Axis",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 },
                 {
                     "name": "ForwardJump",
@@ -85,6 +85,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Block",
+                    "type": "Value",
+                    "id": "1c27018b-f074-4da9-89fb-ee2eccdff3c7",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -123,7 +132,7 @@
                 },
                 {
                     "name": "",
-                    "id": "205bd085-8c75-4645-88e5-bbaa892d5b6c",
+                    "id": "a53ac0de-26b9-41f1-adb4-975e9c849915",
                     "path": "<Keyboard>/s",
                     "interactions": "",
                     "processors": "",
@@ -252,6 +261,17 @@
                     "action": "RightPunch",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "eee04c3f-5b35-4b6e-a99a-1f4293cda208",
+                    "path": "<Keyboard>/u",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "Block",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
@@ -279,12 +299,12 @@
                 },
                 {
                     "name": "Crouch",
-                    "type": "Button",
+                    "type": "Value",
                     "id": "87c4063b-341c-4bd2-9f8f-dad422ad2db6",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "Axis",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 },
                 {
                     "name": "ForwardJump",
@@ -339,6 +359,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Block",
+                    "type": "Value",
+                    "id": "214f22b5-9d02-4db5-b0ea-73ebf7ebe596",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -377,7 +406,7 @@
                 },
                 {
                     "name": "",
-                    "id": "d697d732-e8e6-43e4-8c12-787a6bacbde6",
+                    "id": "d7bebade-3332-4d34-9ca2-590ddfd4d172",
                     "path": "<Keyboard>/downArrow",
                     "interactions": "",
                     "processors": "",
@@ -504,6 +533,17 @@
                     "processors": "",
                     "groups": "Keyboard",
                     "action": "RightPunch",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c35f20e6-9b97-4f22-96a5-9acc3efe52e6",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Block",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

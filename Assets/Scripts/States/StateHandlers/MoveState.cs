@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using Unity.IO.LowLevel.Unsafe;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Windows;
@@ -44,5 +46,38 @@ public class MoveState : State
 
         animator.SetFloat("MovementSpeed", x * player.animMovementSpeed);
         player.Move(input.x);
+
+        if (input.x == 0)
+        {
+            playerStateMachine.ChangeState(playerStateMachine.idleState);
+        }
+        else if (player.inputHandler.IsInAir())
+        {
+            playerStateMachine.ChangeState(playerStateMachine.jumpState);
+        }
+        else if (player.inputHandler.isAttacking)
+        {
+            playerStateMachine.ChangeState(playerStateMachine.attackState);
+        }
+        else if (player.isHitted)
+        {
+            playerStateMachine.ChangeState(playerStateMachine.hitState);
+        }
+        else if (player.isDead)
+        {
+            playerStateMachine.ChangeState(playerStateMachine.deathState);
+        }
+        else if (player.isWon)
+        {
+            playerStateMachine.ChangeState(playerStateMachine.celebrationState);
+        }
+        else if(player.isRotated)
+        {
+            playerStateMachine.ChangeState(playerStateMachine.rotationState);
+        }
+        else if (player.inputHandler.isCrouching)
+        {
+            playerStateMachine.ChangeState(playerStateMachine.crouchState);
+        }
     }
 }

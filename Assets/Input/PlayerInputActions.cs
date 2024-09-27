@@ -47,12 +47,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""Crouch"",
-                    ""type"": ""Button"",
+                    ""type"": ""Value"",
                     ""id"": ""5b3793f1-8e7a-47fb-832b-16a5be1ecc8e"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": ""Axis"",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": false
+                    ""initialStateCheck"": true
                 },
                 {
                     ""name"": ""ForwardJump"",
@@ -107,6 +107,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Block"",
+                    ""type"": ""Value"",
+                    ""id"": ""1c27018b-f074-4da9-89fb-ee2eccdff3c7"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -145,7 +154,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""205bd085-8c75-4645-88e5-bbaa892d5b6c"",
+                    ""id"": ""a53ac0de-26b9-41f1-adb4-975e9c849915"",
                     ""path"": ""<Keyboard>/s"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -274,6 +283,17 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""RightPunch"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""eee04c3f-5b35-4b6e-a99a-1f4293cda208"",
+                    ""path"": ""<Keyboard>/u"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Block"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -301,12 +321,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""Crouch"",
-                    ""type"": ""Button"",
+                    ""type"": ""Value"",
                     ""id"": ""87c4063b-341c-4bd2-9f8f-dad422ad2db6"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": ""Axis"",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": false
+                    ""initialStateCheck"": true
                 },
                 {
                     ""name"": ""ForwardJump"",
@@ -361,6 +381,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Block"",
+                    ""type"": ""Value"",
+                    ""id"": ""214f22b5-9d02-4db5-b0ea-73ebf7ebe596"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -399,7 +428,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""d697d732-e8e6-43e4-8c12-787a6bacbde6"",
+                    ""id"": ""d7bebade-3332-4d34-9ca2-590ddfd4d172"",
                     ""path"": ""<Keyboard>/downArrow"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -528,6 +557,17 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""RightPunch"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c35f20e6-9b97-4f22-96a5-9acc3efe52e6"",
+                    ""path"": ""<Keyboard>/shift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Block"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -557,6 +597,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Player_LeftKick = m_Player.FindAction("LeftKick", throwIfNotFound: true);
         m_Player_LeftPunch = m_Player.FindAction("LeftPunch", throwIfNotFound: true);
         m_Player_RightPunch = m_Player.FindAction("RightPunch", throwIfNotFound: true);
+        m_Player_Block = m_Player.FindAction("Block", throwIfNotFound: true);
         // Player2
         m_Player2 = asset.FindActionMap("Player2", throwIfNotFound: true);
         m_Player2_Move = m_Player2.FindAction("Move", throwIfNotFound: true);
@@ -568,6 +609,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Player2_LeftKick = m_Player2.FindAction("LeftKick", throwIfNotFound: true);
         m_Player2_LeftPunch = m_Player2.FindAction("LeftPunch", throwIfNotFound: true);
         m_Player2_RightPunch = m_Player2.FindAction("RightPunch", throwIfNotFound: true);
+        m_Player2_Block = m_Player2.FindAction("Block", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -638,6 +680,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_LeftKick;
     private readonly InputAction m_Player_LeftPunch;
     private readonly InputAction m_Player_RightPunch;
+    private readonly InputAction m_Player_Block;
     public struct PlayerActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -651,6 +694,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @LeftKick => m_Wrapper.m_Player_LeftKick;
         public InputAction @LeftPunch => m_Wrapper.m_Player_LeftPunch;
         public InputAction @RightPunch => m_Wrapper.m_Player_RightPunch;
+        public InputAction @Block => m_Wrapper.m_Player_Block;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -687,6 +731,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @RightPunch.started += instance.OnRightPunch;
             @RightPunch.performed += instance.OnRightPunch;
             @RightPunch.canceled += instance.OnRightPunch;
+            @Block.started += instance.OnBlock;
+            @Block.performed += instance.OnBlock;
+            @Block.canceled += instance.OnBlock;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -718,6 +765,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @RightPunch.started -= instance.OnRightPunch;
             @RightPunch.performed -= instance.OnRightPunch;
             @RightPunch.canceled -= instance.OnRightPunch;
+            @Block.started -= instance.OnBlock;
+            @Block.performed -= instance.OnBlock;
+            @Block.canceled -= instance.OnBlock;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -748,6 +798,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player2_LeftKick;
     private readonly InputAction m_Player2_LeftPunch;
     private readonly InputAction m_Player2_RightPunch;
+    private readonly InputAction m_Player2_Block;
     public struct Player2Actions
     {
         private @PlayerInputActions m_Wrapper;
@@ -761,6 +812,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @LeftKick => m_Wrapper.m_Player2_LeftKick;
         public InputAction @LeftPunch => m_Wrapper.m_Player2_LeftPunch;
         public InputAction @RightPunch => m_Wrapper.m_Player2_RightPunch;
+        public InputAction @Block => m_Wrapper.m_Player2_Block;
         public InputActionMap Get() { return m_Wrapper.m_Player2; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -797,6 +849,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @RightPunch.started += instance.OnRightPunch;
             @RightPunch.performed += instance.OnRightPunch;
             @RightPunch.canceled += instance.OnRightPunch;
+            @Block.started += instance.OnBlock;
+            @Block.performed += instance.OnBlock;
+            @Block.canceled += instance.OnBlock;
         }
 
         private void UnregisterCallbacks(IPlayer2Actions instance)
@@ -828,6 +883,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @RightPunch.started -= instance.OnRightPunch;
             @RightPunch.performed -= instance.OnRightPunch;
             @RightPunch.canceled -= instance.OnRightPunch;
+            @Block.started -= instance.OnBlock;
+            @Block.performed -= instance.OnBlock;
+            @Block.canceled -= instance.OnBlock;
         }
 
         public void RemoveCallbacks(IPlayer2Actions instance)
@@ -865,6 +923,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnLeftKick(InputAction.CallbackContext context);
         void OnLeftPunch(InputAction.CallbackContext context);
         void OnRightPunch(InputAction.CallbackContext context);
+        void OnBlock(InputAction.CallbackContext context);
     }
     public interface IPlayer2Actions
     {
@@ -877,5 +936,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnLeftKick(InputAction.CallbackContext context);
         void OnLeftPunch(InputAction.CallbackContext context);
         void OnRightPunch(InputAction.CallbackContext context);
+        void OnBlock(InputAction.CallbackContext context);
     }
 }

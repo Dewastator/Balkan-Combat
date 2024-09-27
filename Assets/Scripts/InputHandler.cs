@@ -16,8 +16,10 @@ public class InputHandler : MonoBehaviour
     public bool jumpedUp;
     public bool forwardJump;
     public bool backJump;
+    public bool isCrouching;
+    public bool isBlocking;
 
-    public bool isMovingRight;
+    public bool isMovingForward;
     public bool isMovingLeft;
 
     public Vector2 moveInput;
@@ -32,15 +34,12 @@ public class InputHandler : MonoBehaviour
         moveInput = context.ReadValue<Vector2>();
         if (moveInput.x > 0)
         {
-            isMovingRight = true;
-        }else if(moveInput.x < 0)
-        {
-            isMovingLeft = true;
+            isMovingForward = true;
         }
         else
         {
             isMovingLeft = false;
-            isMovingRight = false;
+            isMovingForward = false;
         }
     }
     public void OnLeftPunch(InputAction.CallbackContext context)
@@ -81,7 +80,7 @@ public class InputHandler : MonoBehaviour
 
     public void OnBackJump(InputAction.CallbackContext context)
     {
-        if (groundedCheck.isGrounded)
+        if (groundedCheck.isGrounded && !IsAttacking() && !isCrouching)
         {
             backJump = true;
         }
@@ -89,7 +88,7 @@ public class InputHandler : MonoBehaviour
 
     public void OnForwardJump(InputAction.CallbackContext context)
     {
-        if (groundedCheck.isGrounded)
+        if (groundedCheck.isGrounded && !IsAttacking() && !isCrouching)
         {
             forwardJump = true;
         }
@@ -98,14 +97,42 @@ public class InputHandler : MonoBehaviour
 
     public void OnJump(InputAction.CallbackContext context)
     {
-        if (groundedCheck.isGrounded)
+        if (groundedCheck.isGrounded && !IsAttacking() && !isCrouching)
         {
             jumpedUp = true;
         }
     }
 
+    public void OnCrouch(InputAction.CallbackContext context)
+    {
+        if (context.ReadValue<float>() != 0)
+        {
+            isCrouching = true;
+        }
+        else
+        {
+            isCrouching = false;
+        }
+    }
+
+    public void OnBlock(InputAction.CallbackContext context)
+    {
+        if (context.ReadValue<float>() != 0)
+        {
+            isBlocking = true;
+        }
+        else
+        {
+            isBlocking = false;
+        }
+    }
     public bool IsInAir()
     {
         return jumpedUp || backJump || forwardJump;
+    }
+    
+    public bool IsAttacking()
+    {
+        return rightArmPunch || rightLegKick || leftArmPunch || leftLegKick;
     }
 }

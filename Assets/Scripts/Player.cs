@@ -3,20 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UIElements;
 
 [RequireComponent(typeof(InputHandler))]
 public class Player : MonoBehaviour
 {
     private PlayerStateMachine stateMachine;
-    #region States
-    private IdleState idleState;
-    private MoveState moveState;
-    private JumpState jumpState;
-    private AttackState attackState;
-    private HitState hitState;
-    private DeathState deathState;
-    private CelebrationState celebrationState;
-    #endregion
+    
     public Rigidbody rb { get; set; }
 
     public InputHandler inputHandler { get; private set; }
@@ -24,9 +17,7 @@ public class Player : MonoBehaviour
 
     public AnimationCurve jumpAnimationCurve;
     public AnimationCurve jumpDistanceAnimationCurve;
-
-    public float startingYPos;
-    public float startingXPos;
+    public AnimationCurve fallAnimationCurve;
 
     [SerializeField]
     private Animator playerAnimator;
@@ -39,7 +30,6 @@ public class Player : MonoBehaviour
     [SerializeField]
     private Transform enemyCheckBack;
     public LayerMask enemyMask;
-    public bool isInAir => inputHandler.IsInAir();
 
     public float movementSpeed;
     public float animMovementSpeed;
@@ -49,13 +39,15 @@ public class Player : MonoBehaviour
     public float jumpSpeed { get; private set; }
 
     [field: SerializeField]
-    public float jumpDistance { get; private set; }
+    public float jumpDistance { get; set; }
+
+    public float startingJumpDistance;
 
     [field: SerializeField]
     public float jumpHeight { get; private set; }
 
 
-    [field: Header("AttackPoints")]
+    [field: Header("AttackPositionPoints")]
     [SerializeField]
     private Transform rightPuncHitPoint;
     [SerializeField]
@@ -75,12 +67,22 @@ public class Player : MonoBehaviour
 
     public bool isHitted { get; set; }
 
-    private bool isDead { get; set; }
-    private bool isWon { get; set; }
+    public bool isDead { get; set; }
+    public bool isWon { get; set; }
+    public bool isRotated { get; set; }
+    public bool isplayer2Rotated { get; set; }
     public PlayerInputActions playerInput { get; private set; }
 
     [SerializeField]
     private UnityEvent OnCelebrationStart;
+
+    [field: Header("FallSettings")]
+
+    [field: SerializeField]
+    public float fallSpeed { get; private set; }
+
+
+    public Vector3 enemyPosToRotateTo { get; private set; }
 
     private void Awake()
     {
@@ -92,79 +94,40 @@ public class Player : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         inputHandler = GetComponent<InputHandler>();
         groundedCheck = GetComponent<GroundedCheck>();
-        startingYPos = transform.position.y;
         SetupStates();
         animMovementSpeed = movementSpeed;
+        startingJumpDistance = jumpDistance;
     }
 
     private void SetupStates()
     {
-        idleState = new IdleState(this, stateMachine, playerAnimator, rb);
-        moveState = new MoveState(this, stateMachine, playerAnimator, rb);
-        jumpState = new JumpState(this, stateMachine, playerAnimator, rb);
-        attackState = new AttackState(this, stateMachine, playerAnimator, rb);
-        hitState = new HitState(this, stateMachine, playerAnimator, rb);
-        deathState = new DeathState(this, stateMachine, playerAnimator, rb);
-        celebrationState = new CelebrationState(this, stateMachine, playerAnimator, rb);
-        stateMachine.Initialize(idleState);
+        stateMachine.Initialize(this, playerAnimator, rb);
     }
 
     private void Update()
     {
         EnemyCheck();
 
-        if (inputHandler.moveInput.x != 0 && groundedCheck.isGrounded && !isInAir && !inputHandler.isAttacking && !isHitted && !isDead && !isWon)
-        {
-            stateMachine.ChangeState(moveState);
-        }
-        else if (groundedCheck.isGrounded && isInAir && !inputHandler.isAttacking && !isHitted && !isDead && !isWon)
-        {
-            stateMachine.ChangeState(jumpState);
-        }
-        else if (!isInAir && groundedCheck.isGrounded && !inputHandler.isAttacking && !isHitted && !isDead && !isWon)
-        {
-            stateMachine.ChangeState(idleState);
-        }
-        else if (inputHandler.isAttacking && groundedCheck.isGrounded && !isHitted && !isDead && !isWon)
-        {
-            stateMachine.ChangeState(attackState);
-        }
-        else if (isHitted && !isDead && !isWon)
-        {
-            stateMachine.ChangeState(hitState);
-        }
-        else if (isDead)
-        {
-            stateMachine.ChangeState(deathState);
-        }
-        else if (isWon)
-        {
-            stateMachine.ChangeState(celebrationState);
-        }
-
         stateMachine.CurrentPlayerState.OnUpdate();
     }
 
     private void EnemyCheck()
     {
-        if (!Helper.FacingRight(transform))
-        {
-            isEnemyRight = Physics.Raycast(enemyCheckBack.position, enemyCheckBack.TransformDirection(Vector3.forward), 0.1f, enemyMask);
-            isEnemyLeft = Physics.Raycast(enemyCheckForward.position, enemyCheckForward.TransformDirection(Vector3.forward), 0.1f, enemyMask);
-        }
-        else
-        {
-            isEnemyRight = Physics.Raycast(enemyCheckForward.position, enemyCheckForward.TransformDirection(Vector3.forward), 0.1f, enemyMask);
-            isEnemyLeft = Physics.Raycast(enemyCheckBack.position, enemyCheckBack.TransformDirection(Vector3.forward), 0.1f, enemyMask);
-        }
 
-        if (isEnemyRight)
+        var isEnemyInFront = Physics.OverlapBox(enemyCheckForward.position, new Vector3(0.1f, 1.5f, 0.1f), Quaternion.identity, enemyMask).Length > 0;
+
+
+        if (isEnemyInFront)
         {
-            movementSpeed = inputHandler.isMovingRight ? 0f : animMovementSpeed;
-        }
-        else if (isEnemyLeft)
-        {
-            movementSpeed = inputHandler.isMovingLeft ? 0f : animMovementSpeed;
+            if (Helper.FacingRight(transform))
+            {
+                movementSpeed = inputHandler.isMovingForward ? 0f : animMovementSpeed;
+            }
+            else
+            {
+                movementSpeed = !inputHandler.isMovingForward ? 0f : animMovementSpeed;
+            }
+            //jumpDistance = 1f;
         }
         else
         {
@@ -225,8 +188,19 @@ public class Player : MonoBehaviour
 
     private void GetHit()
     {
+        if(isHitted) return;
+
         isHitted = true;
-        OnHit.Invoke(5);
+        float damage = 0;
+        if (inputHandler.isBlocking)
+        {
+            damage = 2;
+        }
+        else
+        {
+            damage = 5;
+        }
+        OnHit.Invoke(damage);
         currentHitTimes += 1;
     }
 
@@ -237,9 +211,14 @@ public class Player : MonoBehaviour
 
     public void Win()
     {
-        Invoke("StartWinAnimation", animationClips[(int)PlayerAnimation.Death].length);
+        Invoke(nameof(StartWinAnimation), animationClips[(int)PlayerAnimation.Death].length);
     }
 
+    public void Rotate(Vector3 posToRotateTo)
+    {
+        isRotated = true;
+        enemyPosToRotateTo = posToRotateTo;
+    }
     public void StartWinAnimation()
     {
         OnCelebrationStart.Invoke();
@@ -247,8 +226,9 @@ public class Player : MonoBehaviour
     }
     private void OnDrawGizmos()
     {
-        Debug.DrawRay(enemyCheckForward.position, enemyCheckForward.TransformDirection(Vector3.forward), Color.red);
-        Debug.DrawRay(enemyCheckBack.position, enemyCheckBack.TransformDirection(Vector3.forward), Color.red);
+        Gizmos.DrawRay(enemyCheckForward.position, enemyCheckForward.forward * 0.1f);
+        //Draw a cube at the maximum distance
+        Gizmos.DrawWireCube(enemyCheckForward.position + enemyCheckForward.forward * 0.1f, new Vector3(0.3f, 1.5f, 0.3f));
     }
 
 }
@@ -267,5 +247,11 @@ public enum PlayerAnimation
     LeftPunch,
     Hit,
     Death,
-    Celebration
+    Celebration,
+    AirHit,
+    StandingToCrouch,
+    CrouchIdle,
+    CrouchToStanding,
+    Block,
+    BlockHit
 }

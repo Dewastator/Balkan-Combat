@@ -9,7 +9,7 @@ public class UIController : MonoBehaviour
     private AnimationCurve healthBarAnimation;
 
     [SerializeField]
-    private Slider healthBarPlayer, healthBarPlayer2;
+    private Image healthBarPlayer, healthBarPlayer2;
 
     [SerializeField]
     private LayerMask player;
@@ -32,11 +32,11 @@ public class UIController : MonoBehaviour
 
             if (layerMask == player)
             {
-                healthBarPlayer.value = Mathf.Lerp(healthBarPlayer.value, normalized, healthBarAnimation.Evaluate(time));
+                healthBarPlayer.fillAmount = Mathf.Lerp(healthBarPlayer.fillAmount, normalized, healthBarAnimation.Evaluate(time));
             }
             else
             {
-                healthBarPlayer2.value = Mathf.Lerp(healthBarPlayer2.value, normalized, healthBarAnimation.Evaluate(time));
+                healthBarPlayer2.fillAmount = Mathf.Lerp(healthBarPlayer2.fillAmount, normalized, healthBarAnimation.Evaluate(time));
             }
 
             yield return null;

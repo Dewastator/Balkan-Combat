@@ -5,7 +5,8 @@ using UnityEngine;
 public class JumpState : State
 {
     private float jumpTime = 0;
-
+    private float startingYPos;
+    private float startingXPos;
     public JumpState(Player player, PlayerStateMachine playerStateMachine, Animator animator, Rigidbody rb) : base(player, playerStateMachine, animator, rb)
     {
     }
@@ -15,10 +16,14 @@ public class JumpState : State
     {
         base.OnEnter();
 
+        if (player.isRotated)
+        {
+            playerStateMachine.ChangeState(playerStateMachine.rotationState);
+        }
         startTime = Time.time;
         jumpTime = 0;
-        player.startingXPos = player.transform.position.x;
-        player.startingYPos = player.transform.position.y;
+        startingXPos = player.transform.position.x;
+        startingYPos = player.transform.position.y;
         SelectJumpType();
     }
 
@@ -75,6 +80,7 @@ public class JumpState : State
         up = player.inputHandler.jumpedUp = false;
         forward = player.inputHandler.forwardJump = false;
         back = player.inputHandler.backJump = false;
+        player.jumpDistance = player.startingJumpDistance;
     }
 
     public override void OnFixedUpdate()
@@ -92,25 +98,57 @@ public class JumpState : State
 
         if (up)
         {
-            player.transform.position = new Vector3(player.transform.position.x, player.startingYPos + jump * player.jumpHeight, player.transform.position.z);
+            player.transform.position = new Vector3(player.transform.position.x, startingYPos + jump * player.jumpHeight, player.transform.position.z);
         }
         else if (forward)
         {
-            player.transform.position = new Vector3(player.startingXPos + distanceJump * player.jumpDistance, player.startingYPos + jump * player.jumpHeight, player.transform.position.z);
+            player.transform.position = new Vector3(startingXPos + distanceJump * player.jumpDistance, startingYPos + jump * player.jumpHeight, player.transform.position.z);
         }
         else
         {
-            player.transform.position = new Vector3(player.startingXPos - distanceJump * player.jumpDistance, player.startingYPos + jump * player.jumpHeight, player.transform.position.z);
+            player.transform.position = new Vector3(startingXPos - distanceJump * player.jumpDistance, startingYPos + jump * player.jumpHeight, player.transform.position.z);
         }
         
         animator.SetFloat("JumpSpeed", jumpTime);
 
         if(time > 0.1f) 
         {
-            if(player.groundedCheck.isGrounded)
+            if (player.isHitted)
+            {
+                playerStateMachine.ChangeState(playerStateMachine.hitState);
+            }
+            
+            if (player.groundedCheck.isGrounded)
             {
                 Reset();
+                SelectState();
             }
+        }
+
+        
+    }
+
+    private void SelectState()
+    {
+        if (player.inputHandler.moveInput.x != 0)
+        {
+            playerStateMachine.ChangeState(playerStateMachine.moveState);
+        }
+        else if (player.inputHandler.moveInput.x == 0)
+        {
+            playerStateMachine.ChangeState(playerStateMachine.idleState);
+        }
+        else if (player.inputHandler.isAttacking)
+        {
+            playerStateMachine.ChangeState(playerStateMachine.attackState);
+        }
+        else if (player.isDead)
+        {
+            playerStateMachine.ChangeState(playerStateMachine.deathState);
+        }
+        else if (player.isWon)
+        {
+            playerStateMachine.ChangeState(playerStateMachine.celebrationState);
         }
     }
 }
