@@ -22,8 +22,6 @@ public class Player : MonoBehaviour
     [SerializeField]
     private Animator playerAnimator;
 
-    [SerializeField]
-    private List<AnimationClip> animationClips = new List<AnimationClip>();
 
     [SerializeField]
     private Transform enemyCheckForward;
@@ -84,6 +82,9 @@ public class Player : MonoBehaviour
 
     public Vector3 enemyPosToRotateTo { get; private set; }
 
+    [SerializeField]
+    private float timeToWaitForCelebration = 2f;
+
     private void Awake()
     {
         stateMachine = new PlayerStateMachine();
@@ -121,17 +122,17 @@ public class Player : MonoBehaviour
         {
             if (Helper.FacingRight(transform))
             {
-                movementSpeed = inputHandler.isMovingForward ? 0f : animMovementSpeed;
+                //movementSpeed = inputHandler.isMovingForward ? 0f : animMovementSpeed;
             }
             else
             {
-                movementSpeed = !inputHandler.isMovingForward ? 0f : animMovementSpeed;
+                //movementSpeed = !inputHandler.isMovingForward ? 0f : animMovementSpeed;
             }
-            //jumpDistance = 1f;
+            //jumpDistance = 1.1f;
         }
         else
         {
-            movementSpeed = animMovementSpeed;
+            //movementSpeed = animMovementSpeed;
         }
     }
 
@@ -142,12 +143,15 @@ public class Player : MonoBehaviour
 
     public void Move(float x)
     {
-        transform.position += new Vector3(x, 0f, 0f) * movementSpeed * Time.deltaTime;
+        //transform.position += new Vector3(x, 0f, 0f) * movementSpeed * Time.deltaTime;
+        //rb.MovePosition(new Vector3(x,0f,0f) * movementSpeed * Time.deltaTime);
+
+        rb.velocity = new Vector3(x,0f,0f) * movementSpeed;
     }
 
-    public void ChangeAnimation(PlayerAnimation animation, float crossFade, int layer = 0, float time = 0f, float duration = 0f)
+    public void ChangeAnimation(string animation, float crossFade, int layer = 0, float time = 0f, float duration = 0f)
     {
-        playerAnimator.CrossFadeInFixedTime(animationClips[(int)animation].name, crossFade, layer, 0, time);
+        playerAnimator.CrossFadeInFixedTime(animation, crossFade, layer, 0, time);
     }
 
     public void TakeDamage(string attackType)
@@ -211,7 +215,7 @@ public class Player : MonoBehaviour
 
     public void Win()
     {
-        Invoke(nameof(StartWinAnimation), animationClips[(int)PlayerAnimation.Death].length);
+        Invoke(nameof(StartWinAnimation), timeToWaitForCelebration);
     }
 
     public void Rotate(Vector3 posToRotateTo)
@@ -237,21 +241,21 @@ public class Player : MonoBehaviour
 public enum PlayerAnimation
 {
     Idle,
-    Move,
-    JumpUp,
-    Frontflip,
+    Walking,
+    Jumping_Up,
+    Forward_Flip,
     Backflip,
-    RightLegKick,
-    RightPunch,
-    LeftLegKick,
-    LeftPunch,
-    Hit,
+    Right_Kick,
+    Right_Punch,
+    Left_Kick,
+    Left_Punch,
+    Head_Hit,
     Death,
     Celebration,
-    AirHit,
-    StandingToCrouch,
-    CrouchIdle,
-    CrouchToStanding,
+    Air_Hit,
+    Standing_To_Crouch,
+    Crouch_Idle,
+    Crouch_To_Standring,
     Block,
-    BlockHit
+    Block_Hit
 }

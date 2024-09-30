@@ -16,7 +16,7 @@ public class IdleState : State
     {
         base.OnEnter();
         startTime = Time.time;
-        player.ChangeAnimation(PlayerAnimation.Idle, 0.1f);
+        player.ChangeAnimation(PlayerAnimation.Idle.ToString(), 0.1f);
     }
 
     public override void OnExit()

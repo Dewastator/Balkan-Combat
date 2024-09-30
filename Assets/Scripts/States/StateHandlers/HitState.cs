@@ -23,7 +23,7 @@ public class HitState : State
 
         if (!player.groundedCheck.isGrounded)
         {
-            player.ChangeAnimation(PlayerAnimation.AirHit, 0.1f);
+            player.ChangeAnimation(PlayerAnimation.Air_Hit.ToString(), 0.1f);
             Keyframe[] keyframes = player.fallAnimationCurve.keys;
 
             keyframes[0].value = currentYPos;
@@ -36,7 +36,7 @@ public class HitState : State
         }
         else
         {
-            player.ChangeAnimation(PlayerAnimation.Hit, 0.1f);
+            player.ChangeAnimation(PlayerAnimation.Head_Hit.ToString(), 0.1f);
         }
         hitTimes = player.currentHitTimes;
     }

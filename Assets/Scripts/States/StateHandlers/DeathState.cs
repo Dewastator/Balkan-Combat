@@ -16,7 +16,7 @@ public class DeathState : State
         base.OnEnter();
         fallTime = 0;
         currentYPos = player.transform.position.y;
-        player.ChangeAnimation(PlayerAnimation.Death, 0.1f);
+        player.ChangeAnimation(PlayerAnimation.Death.ToString(), 0.1f);
 
         if (!player.groundedCheck.isGrounded)
         {

@@ -29,10 +29,13 @@ public class JumpState : State
 
     private void SelectJumpType()
     {
+        //rb.constraints &= ~RigidbodyConstraints.FreezePositionY;
+
         if (player.inputHandler.jumpedUp)
         {
             up = true;
-            player.ChangeAnimation(PlayerAnimation.JumpUp, 0.1f);
+            player.ChangeAnimation(PlayerAnimation.Jumping_Up.ToString(), 0.1f);
+            rb.velocity = new Vector3(0f, player.jumpHeight, 0f);
         }
         if (player.inputHandler.forwardJump)
         {
@@ -41,13 +44,16 @@ public class JumpState : State
 
             player.inputHandler.jumpedUp = false;
 
+
             if (!Helper.FacingRight(player.transform))
             {
-                player.ChangeAnimation(PlayerAnimation.Backflip, 0.1f);
+                player.ChangeAnimation(PlayerAnimation.Backflip.ToString(), 0.1f);
+                rb.velocity = new Vector3(player.jumpDistance, player.jumpHeight, 0f);
             }
             else
             {
-                player.ChangeAnimation(PlayerAnimation.Frontflip, 0.1f);
+                player.ChangeAnimation(PlayerAnimation.Forward_Flip.ToString(), 0.1f);
+                rb.velocity = new Vector3(player.jumpDistance, player.jumpHeight, 0f);
             }
         }
         if (player.inputHandler.backJump)
@@ -57,13 +63,16 @@ public class JumpState : State
 
             player.inputHandler.jumpedUp = false;
 
+
             if (!Helper.FacingRight(player.transform))
             {
-                player.ChangeAnimation(PlayerAnimation.Frontflip, 0.1f);
+                player.ChangeAnimation(PlayerAnimation.Forward_Flip.ToString(), 0.1f);
+                rb.velocity = new Vector3(-player.jumpDistance, player.jumpHeight, 0f);
             }
             else
             {
-                player.ChangeAnimation(PlayerAnimation.Backflip, 0.1f);
+                player.ChangeAnimation(PlayerAnimation.Backflip.ToString(), 0.1f);
+                rb.velocity = new Vector3(-player.jumpDistance, player.jumpHeight, 0f);
             }
         }
     }
@@ -72,6 +81,7 @@ public class JumpState : State
     {
         base.OnExit();
 
+        animator.speed = 1;
         Reset();
     }
 
@@ -81,38 +91,31 @@ public class JumpState : State
         forward = player.inputHandler.forwardJump = false;
         back = player.inputHandler.backJump = false;
         player.jumpDistance = player.startingJumpDistance;
+        animator.SetFloat("JumpSpeed", 1);
+        //rb.constraints = RigidbodyConstraints.FreezeAll;
+        //rb.constraints &= ~RigidbodyConstraints.FreezePositionX;
     }
 
     public override void OnFixedUpdate()
     {
         base.OnFixedUpdate();
+
+
     }
 
     public override void OnUpdate()
     {
         base.OnUpdate();
 
-        jumpTime += Time.deltaTime * player.jumpSpeed;
-        var jump = player.jumpAnimationCurve.Evaluate(jumpTime);
-        var distanceJump = player.jumpDistanceAnimationCurve.Evaluate(jumpTime);
+        jumpTime = Helper.Map(rb.velocity.y, player.jumpHeight, -player.jumpHeight, 0, 1, true);
 
-        if (up)
-        {
-            player.transform.position = new Vector3(player.transform.position.x, startingYPos + jump * player.jumpHeight, player.transform.position.z);
-        }
-        else if (forward)
-        {
-            player.transform.position = new Vector3(startingXPos + distanceJump * player.jumpDistance, startingYPos + jump * player.jumpHeight, player.transform.position.z);
-        }
-        else
-        {
-            player.transform.position = new Vector3(startingXPos - distanceJump * player.jumpDistance, startingYPos + jump * player.jumpHeight, player.transform.position.z);
-        }
-        
         animator.SetFloat("JumpSpeed", jumpTime);
 
-        if(time > 0.1f) 
+
+        if (time > 0.1f) 
         {
+            animator.speed = 0;
+
             if (player.isHitted)
             {
                 playerStateMachine.ChangeState(playerStateMachine.hitState);
@@ -125,7 +128,6 @@ public class JumpState : State
             }
         }
 
-        
     }
 
     private void SelectState()

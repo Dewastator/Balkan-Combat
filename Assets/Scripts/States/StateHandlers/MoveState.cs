@@ -8,7 +8,7 @@ using UnityEngine.Windows;
 
 public class MoveState : State
 {
-
+    private float dirX;
     public MoveState(Player player, PlayerStateMachine playerStateMachine, Animator animator, Rigidbody rb) : base(player, playerStateMachine, animator, rb)
     {
         
@@ -18,18 +18,34 @@ public class MoveState : State
     {
         base.OnEnter();
 
-        player.ChangeAnimation(PlayerAnimation.Move, 0.1f);
+        player.ChangeAnimation(PlayerAnimation.Walking.ToString(), 0.1f);
     }
 
     public override void OnExit()
     {
         base.OnExit();
         animator.SetFloat("MovementSpeed", 0);
+
+        rb.velocity = new Vector3(0f, 0f, 0f);
+
     }
 
     public override void OnFixedUpdate()
     {
         base.OnFixedUpdate();
+
+        if (!Helper.FacingRight(player.transform))
+        {
+            animator.SetFloat("MovementSpeed", -dirX * player.animMovementSpeed);
+        }
+        else
+        {
+            animator.SetFloat("MovementSpeed", dirX * player.animMovementSpeed);
+
+        }
+
+
+        rb.velocity = new Vector3(dirX, 0f, 0f) * player.movementSpeed;
     }
 
     public override void OnUpdate()
@@ -37,15 +53,10 @@ public class MoveState : State
         base.OnUpdate();
 
         var input = player.inputHandler.moveInput;
-        var x = player.inputHandler.moveInput.x;
+        dirX = player.inputHandler.moveInput.x;
 
-        if (!Helper.FacingRight(player.transform))
-        {
-            x = -x;
-        }
+        
 
-        animator.SetFloat("MovementSpeed", x * player.animMovementSpeed);
-        player.Move(input.x);
 
         if (input.x == 0)
         {

@@ -12,7 +12,7 @@ public class CrouchState : State
     {
         base.OnEnter();
         startTime = Time.time;
-        player.ChangeAnimation(PlayerAnimation.StandingToCrouch, 0.1f);
+        player.ChangeAnimation(PlayerAnimation.Standing_To_Crouch.ToString(), 0.1f);
     }
 
     public override void OnExit()
@@ -38,7 +38,7 @@ public class CrouchState : State
                 }
                 if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.9f)
                 {
-                    player.ChangeAnimation(PlayerAnimation.CrouchIdle, 0f);
+                    player.ChangeAnimation(PlayerAnimation.Crouch_Idle.ToString(), 0f);
                 }
             }
         }

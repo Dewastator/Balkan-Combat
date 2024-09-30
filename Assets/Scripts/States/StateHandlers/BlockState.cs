@@ -12,7 +12,7 @@ public class BlockState : State
     {
         base.OnEnter();
         startTime = Time.time;
-        player.ChangeAnimation(PlayerAnimation.Block, 0f);
+        player.ChangeAnimation(PlayerAnimation.Block.ToString(), 0f);
     }
 
     public override void OnExit()
@@ -33,7 +33,7 @@ public class BlockState : State
         {
             if (player.isHitted)
             {
-                player.ChangeAnimation(PlayerAnimation.BlockHit, 0.1f);
+                player.ChangeAnimation(PlayerAnimation.Block_Hit.ToString(), 0.1f);
                 player.isHitted = false;
             }
 
@@ -42,7 +42,7 @@ public class BlockState : State
                 
                 if (animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.9f)
                 {
-                    player.ChangeAnimation(PlayerAnimation.Block, 0f);
+                    player.ChangeAnimation(PlayerAnimation.Block.ToString(), 0f);
                 }
             }
         }

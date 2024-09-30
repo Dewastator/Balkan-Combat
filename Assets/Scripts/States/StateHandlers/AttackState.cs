@@ -16,19 +16,19 @@ public class AttackState : State
         startTime = Time.time;
         if (player.inputHandler.rightLegKick)
         {
-            player.ChangeAnimation(PlayerAnimation.RightLegKick, 0.1f);
+            player.ChangeAnimation(PlayerAnimation.Right_Kick.ToString(), 0.1f);
         }
         if(player.inputHandler.leftLegKick)
         {
-            player.ChangeAnimation(PlayerAnimation.LeftLegKick, 0.1f);
+            player.ChangeAnimation(PlayerAnimation.Left_Kick.ToString(), 0.1f);
         }
         if (player.inputHandler.leftArmPunch)
         {
-            player.ChangeAnimation(PlayerAnimation.LeftPunch, 0.1f);
+            player.ChangeAnimation(PlayerAnimation.Left_Punch.ToString(), 0.1f);
         }
         if (player.inputHandler.rightArmPunch)
         {
-            player.ChangeAnimation(PlayerAnimation.RightPunch, 0.1f);
+            player.ChangeAnimation(PlayerAnimation.Right_Punch.ToString(), 0.1f);
         }
     }
 

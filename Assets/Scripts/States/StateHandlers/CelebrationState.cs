@@ -11,7 +11,7 @@ public class CelebrationState : State
     public override void OnEnter()
     {
         base.OnEnter();
-        player.ChangeAnimation(PlayerAnimation.Celebration, 0.1f);
+        player.ChangeAnimation(PlayerAnimation.Celebration.ToString(), 0.1f);
     }
 
     public override void OnExit()
